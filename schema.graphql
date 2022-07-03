@@ -388,6 +388,7 @@ input CreateInitialUserInput {
   name: String
   email: String
   password: String
+  createdOn: DateTime
 }
 
 type Query {
