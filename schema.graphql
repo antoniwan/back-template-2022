@@ -6,6 +6,7 @@ type User {
   name: String
   email: String
   password: PasswordState
+  isAdmin: Boolean
   posts(
     where: PostWhereInput! = {}
     orderBy: [PostOrderByInput!]! = []
@@ -13,11 +14,16 @@ type User {
     skip: Int! = 0
   ): [Post!]
   postsCount(where: PostWhereInput! = {}): Int
+  lastOnlineOn: DateTime
+  createdOn: DateTime
 }
 
 type PasswordState {
   isSet: Boolean!
 }
+
+scalar DateTime
+  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
 input UserWhereUniqueInput {
   id: ID
@@ -31,7 +37,10 @@ input UserWhereInput {
   id: IDFilter
   name: StringFilter
   email: StringFilter
+  isAdmin: BooleanFilter
   posts: PostManyRelationFilter
+  lastOnlineOn: DateTimeNullableFilter
+  createdOn: DateTimeFilter
 }
 
 input IDFilter {
@@ -73,16 +82,46 @@ input NestedStringFilter {
   not: NestedStringFilter
 }
 
+input BooleanFilter {
+  equals: Boolean
+  not: BooleanFilter
+}
+
 input PostManyRelationFilter {
   every: PostWhereInput
   some: PostWhereInput
   none: PostWhereInput
 }
 
+input DateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeNullableFilter
+}
+
+input DateTimeFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeFilter
+}
+
 input UserOrderByInput {
   id: OrderDirection
   name: OrderDirection
   email: OrderDirection
+  isAdmin: OrderDirection
+  lastOnlineOn: OrderDirection
+  createdOn: OrderDirection
 }
 
 enum OrderDirection {
@@ -94,7 +133,10 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  isAdmin: Boolean
   posts: PostRelateToManyForUpdateInput
+  lastOnlineOn: DateTime
+  createdOn: DateTime
 }
 
 input PostRelateToManyForUpdateInput {
@@ -113,7 +155,10 @@ input UserCreateInput {
   name: String
   email: String
   password: String
+  isAdmin: Boolean
   posts: PostRelateToManyForCreateInput
+  lastOnlineOn: DateTime
+  createdOn: DateTime
 }
 
 input PostRelateToManyForCreateInput {
@@ -140,9 +185,6 @@ type Post {
 type Post_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
-
-scalar DateTime
-  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
 input PostWhereUniqueInput {
   id: ID
@@ -186,17 +228,6 @@ input NestedStringNullableFilter {
   startsWith: String
   endsWith: String
   not: NestedStringNullableFilter
-}
-
-input DateTimeNullableFilter {
-  equals: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  gt: DateTime
-  gte: DateTime
-  not: DateTimeNullableFilter
 }
 
 input TagManyRelationFilter {

@@ -13,11 +13,16 @@ generator client {
 }
 
 model User {
-  id       String @id @default(cuid())
-  name     String @default("")
-  email    String @unique @default("")
-  password String
-  posts    Post[] @relation("Post_author")
+  id           String    @id @default(cuid())
+  name         String    @default("")
+  email        String    @unique @default("")
+  password     String
+  isAdmin      Boolean   @default(false)
+  posts        Post[]    @relation("Post_author")
+  lastOnlineOn DateTime?
+  createdOn    DateTime  @default(now())
+
+  @@index([createdOn])
 }
 
 model Post {
