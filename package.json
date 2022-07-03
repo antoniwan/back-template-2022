@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@keystone-6/auth": "^3.0.0",
+    "@keystone-6/cloudinary": "^4.0.0",
     "@keystone-6/core": "^2.0.0",
     "@keystone-6/fields-document": "^3.0.0",
     "dotenv": "^16.0.1",
