@@ -14,6 +14,13 @@ type User {
     skip: Int! = 0
   ): [Post!]
   postsCount(where: PostWhereInput! = {}): Int
+  images(
+    where: UserImageWhereInput! = {}
+    orderBy: [UserImageOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [UserImage!]
+  imagesCount(where: UserImageWhereInput! = {}): Int
   lastOnlineOn: DateTime
   createdOn: DateTime
 }
@@ -39,6 +46,7 @@ input UserWhereInput {
   email: StringFilter
   isAdmin: BooleanFilter
   posts: PostManyRelationFilter
+  images: UserImageManyRelationFilter
   lastOnlineOn: DateTimeNullableFilter
   createdOn: DateTimeFilter
 }
@@ -93,6 +101,12 @@ input PostManyRelationFilter {
   none: PostWhereInput
 }
 
+input UserImageManyRelationFilter {
+  every: UserImageWhereInput
+  some: UserImageWhereInput
+  none: UserImageWhereInput
+}
+
 input DateTimeNullableFilter {
   equals: DateTime
   in: [DateTime!]
@@ -135,6 +149,7 @@ input UserUpdateInput {
   password: String
   isAdmin: Boolean
   posts: PostRelateToManyForUpdateInput
+  images: UserImageRelateToManyForUpdateInput
   lastOnlineOn: DateTime
   createdOn: DateTime
 }
@@ -144,6 +159,13 @@ input PostRelateToManyForUpdateInput {
   set: [PostWhereUniqueInput!]
   create: [PostCreateInput!]
   connect: [PostWhereUniqueInput!]
+}
+
+input UserImageRelateToManyForUpdateInput {
+  disconnect: [UserImageWhereUniqueInput!]
+  set: [UserImageWhereUniqueInput!]
+  create: [UserImageCreateInput!]
+  connect: [UserImageWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -157,6 +179,7 @@ input UserCreateInput {
   password: String
   isAdmin: Boolean
   posts: PostRelateToManyForCreateInput
+  images: UserImageRelateToManyForCreateInput
   lastOnlineOn: DateTime
   createdOn: DateTime
 }
@@ -164,6 +187,123 @@ input UserCreateInput {
 input PostRelateToManyForCreateInput {
   create: [PostCreateInput!]
   connect: [PostWhereUniqueInput!]
+}
+
+input UserImageRelateToManyForCreateInput {
+  create: [UserImageCreateInput!]
+  connect: [UserImageWhereUniqueInput!]
+}
+
+type UserImage {
+  id: ID!
+  title: String
+  image: CloudinaryImage_File
+  author: User
+  createdOn: DateTime
+}
+
+type CloudinaryImage_File {
+  id: ID
+  filename: String
+  originalFilename: String
+  mimetype: String
+  encoding: String
+  publicUrl: String
+  publicUrlTransformed(transformation: CloudinaryImageFormat): String
+}
+
+"""
+Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
+All options are strings as they ultimately end up in a URL.
+"""
+input CloudinaryImageFormat {
+  """
+  Rewrites the filename to be this pretty string. Do not include `/` or `.`
+  """
+  prettyName: String
+  width: String
+  height: String
+  crop: String
+  aspect_ratio: String
+  gravity: String
+  zoom: String
+  x: String
+  y: String
+  format: String
+  fetch_format: String
+  quality: String
+  radius: String
+  angle: String
+  effect: String
+  opacity: String
+  border: String
+  background: String
+  overlay: String
+  underlay: String
+  default_image: String
+  delay: String
+  color: String
+  color_space: String
+  dpr: String
+  page: String
+  density: String
+  flags: String
+  transformation: String
+}
+
+input UserImageWhereUniqueInput {
+  id: ID
+}
+
+input UserImageWhereInput {
+  AND: [UserImageWhereInput!]
+  OR: [UserImageWhereInput!]
+  NOT: [UserImageWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  author: UserWhereInput
+  createdOn: DateTimeFilter
+}
+
+input UserImageOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  createdOn: OrderDirection
+}
+
+input UserImageUpdateInput {
+  title: String
+  image: Upload
+  author: UserRelateToOneForUpdateInput
+  createdOn: DateTime
+}
+
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
+
+input UserRelateToOneForUpdateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+}
+
+input UserImageUpdateArgs {
+  where: UserImageWhereUniqueInput!
+  data: UserImageUpdateInput!
+}
+
+input UserImageCreateInput {
+  title: String
+  image: Upload
+  author: UserRelateToOneForCreateInput
+  createdOn: DateTime
+}
+
+input UserRelateToOneForCreateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 type Post {
@@ -252,12 +392,6 @@ input PostUpdateInput {
   tags: TagRelateToManyForUpdateInput
 }
 
-input UserRelateToOneForUpdateInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
-  disconnect: Boolean
-}
-
 input TagRelateToManyForUpdateInput {
   disconnect: [TagWhereUniqueInput!]
   set: [TagWhereUniqueInput!]
@@ -277,11 +411,6 @@ input PostCreateInput {
   publishDate: DateTime
   author: UserRelateToOneForCreateInput
   tags: TagRelateToManyForCreateInput
-}
-
-input UserRelateToOneForCreateInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
 }
 
 input TagRelateToManyForCreateInput {
@@ -349,6 +478,15 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
+  createUserImage(data: UserImageCreateInput!): UserImage
+  createUserImages(data: [UserImageCreateInput!]!): [UserImage]
+  updateUserImage(
+    where: UserImageWhereUniqueInput!
+    data: UserImageUpdateInput!
+  ): UserImage
+  updateUserImages(data: [UserImageUpdateArgs!]!): [UserImage]
+  deleteUserImage(where: UserImageWhereUniqueInput!): UserImage
+  deleteUserImages(where: [UserImageWhereUniqueInput!]!): [UserImage]
   createPost(data: PostCreateInput!): Post
   createPosts(data: [PostCreateInput!]!): [Post]
   updatePost(where: PostWhereUniqueInput!, data: PostUpdateInput!): Post
@@ -400,6 +538,14 @@ type Query {
   ): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
+  userImages(
+    where: UserImageWhereInput! = {}
+    orderBy: [UserImageOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [UserImage!]
+  userImage(where: UserImageWhereUniqueInput!): UserImage
+  userImagesCount(where: UserImageWhereInput! = {}): Int
   posts(
     where: PostWhereInput! = {}
     orderBy: [PostOrderByInput!]! = []

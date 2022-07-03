@@ -18,6 +18,7 @@ export const User = list({
     password: password({ validation: { isRequired: true } }),
     isAdmin: checkbox({ defaultValue: false }),
     posts: relationship({ ref: "Post.author", many: true }),
+    images: relationship({ ref: "UserImage.author", many: true }),
     lastOnlineOn: timestamp({
       defaultValue: undefined,
       db: {

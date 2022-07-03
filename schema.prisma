@@ -13,15 +13,28 @@ generator client {
 }
 
 model User {
-  id           String    @id @default(cuid())
-  name         String    @default("")
-  email        String    @unique @default("")
+  id           String      @id @default(cuid())
+  name         String      @default("")
+  email        String      @unique @default("")
   password     String
-  isAdmin      Boolean   @default(false)
-  posts        Post[]    @relation("Post_author")
+  isAdmin      Boolean     @default(false)
+  posts        Post[]      @relation("Post_author")
+  images       UserImage[] @relation("UserImage_author")
   lastOnlineOn DateTime?
-  createdOn    DateTime  @default(now())
+  createdOn    DateTime    @default(now())
 
+  @@index([createdOn])
+}
+
+model UserImage {
+  id        String   @id @default(cuid())
+  title     String   @default("")
+  image     String?
+  author    User?    @relation("UserImage_author", fields: [authorId], references: [id])
+  authorId  String?  @map("author")
+  createdOn DateTime @default(now())
+
+  @@index([authorId])
   @@index([createdOn])
 }
 
