@@ -29,9 +29,12 @@ model User {
 model UserImage {
   id        String   @id @default(cuid())
   title     String   @default("")
+  type      String   @default("post_picture")
   image     String?
+  content   String   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   author    User?    @relation("UserImage_author", fields: [authorId], references: [id])
   authorId  String?  @map("author")
+  tags      Tag[]    @relation("Tag_userImages")
   createdOn DateTime @default(now())
 
   @@index([authorId])
@@ -52,7 +55,8 @@ model Post {
 }
 
 model Tag {
-  id    String @id @default(cuid())
-  name  String @default("")
-  posts Post[] @relation("Post_tags")
+  id         String      @id @default(cuid())
+  name       String      @unique @default("")
+  posts      Post[]      @relation("Post_tags")
+  userImages UserImage[] @relation("Tag_userImages")
 }

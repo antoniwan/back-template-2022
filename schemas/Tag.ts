@@ -2,12 +2,12 @@ import { list } from "@keystone-6/core";
 import { text, relationship } from "@keystone-6/core/fields";
 
 export const Tag = list({
-  ui: {
-    isHidden: true,
-  },
   fields: {
-    name: text(),
+    name: text({
+      isIndexed: "unique",
+    }),
     posts: relationship({ ref: "Post.tags", many: true }),
+    userImages: relationship({ ref: "UserImage.tags", many: true }),
   },
 });
 

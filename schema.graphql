@@ -197,9 +197,23 @@ input UserImageRelateToManyForCreateInput {
 type UserImage {
   id: ID!
   title: String
+  type: UserImageTypeType
   image: CloudinaryImage_File
+  content: UserImage_content_Document
   author: User
+  tags(
+    where: TagWhereInput! = {}
+    orderBy: [TagOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Tag!]
+  tagsCount(where: TagWhereInput! = {}): Int
   createdOn: DateTime
+}
+
+enum UserImageTypeType {
+  profile_picture
+  post_picture
 }
 
 type CloudinaryImage_File {
@@ -251,6 +265,10 @@ input CloudinaryImageFormat {
   transformation: String
 }
 
+type UserImage_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
 input UserImageWhereUniqueInput {
   id: ID
 }
@@ -261,20 +279,39 @@ input UserImageWhereInput {
   NOT: [UserImageWhereInput!]
   id: IDFilter
   title: StringFilter
+  type: UserImageTypeTypeNullableFilter
   author: UserWhereInput
+  tags: TagManyRelationFilter
   createdOn: DateTimeFilter
+}
+
+input UserImageTypeTypeNullableFilter {
+  equals: UserImageTypeType
+  in: [UserImageTypeType!]
+  notIn: [UserImageTypeType!]
+  not: UserImageTypeTypeNullableFilter
+}
+
+input TagManyRelationFilter {
+  every: TagWhereInput
+  some: TagWhereInput
+  none: TagWhereInput
 }
 
 input UserImageOrderByInput {
   id: OrderDirection
   title: OrderDirection
+  type: OrderDirection
   createdOn: OrderDirection
 }
 
 input UserImageUpdateInput {
   title: String
+  type: UserImageTypeType
   image: Upload
+  content: JSON
   author: UserRelateToOneForUpdateInput
+  tags: TagRelateToManyForUpdateInput
   createdOn: DateTime
 }
 
@@ -289,6 +326,13 @@ input UserRelateToOneForUpdateInput {
   disconnect: Boolean
 }
 
+input TagRelateToManyForUpdateInput {
+  disconnect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
 input UserImageUpdateArgs {
   where: UserImageWhereUniqueInput!
   data: UserImageUpdateInput!
@@ -296,14 +340,22 @@ input UserImageUpdateArgs {
 
 input UserImageCreateInput {
   title: String
+  type: UserImageTypeType
   image: Upload
+  content: JSON
   author: UserRelateToOneForCreateInput
+  tags: TagRelateToManyForCreateInput
   createdOn: DateTime
 }
 
 input UserRelateToOneForCreateInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
+}
+
+input TagRelateToManyForCreateInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
 }
 
 type Post {
@@ -370,12 +422,6 @@ input NestedStringNullableFilter {
   not: NestedStringNullableFilter
 }
 
-input TagManyRelationFilter {
-  every: TagWhereInput
-  some: TagWhereInput
-  none: TagWhereInput
-}
-
 input PostOrderByInput {
   id: OrderDirection
   title: OrderDirection
@@ -392,13 +438,6 @@ input PostUpdateInput {
   tags: TagRelateToManyForUpdateInput
 }
 
-input TagRelateToManyForUpdateInput {
-  disconnect: [TagWhereUniqueInput!]
-  set: [TagWhereUniqueInput!]
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
-}
-
 input PostUpdateArgs {
   where: PostWhereUniqueInput!
   data: PostUpdateInput!
@@ -413,11 +452,6 @@ input PostCreateInput {
   tags: TagRelateToManyForCreateInput
 }
 
-input TagRelateToManyForCreateInput {
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
-}
-
 type Tag {
   id: ID!
   name: String
@@ -428,10 +462,18 @@ type Tag {
     skip: Int! = 0
   ): [Post!]
   postsCount(where: PostWhereInput! = {}): Int
+  userImages(
+    where: UserImageWhereInput! = {}
+    orderBy: [UserImageOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [UserImage!]
+  userImagesCount(where: UserImageWhereInput! = {}): Int
 }
 
 input TagWhereUniqueInput {
   id: ID
+  name: String
 }
 
 input TagWhereInput {
@@ -441,6 +483,7 @@ input TagWhereInput {
   id: IDFilter
   name: StringFilter
   posts: PostManyRelationFilter
+  userImages: UserImageManyRelationFilter
 }
 
 input TagOrderByInput {
@@ -451,6 +494,7 @@ input TagOrderByInput {
 input TagUpdateInput {
   name: String
   posts: PostRelateToManyForUpdateInput
+  userImages: UserImageRelateToManyForUpdateInput
 }
 
 input TagUpdateArgs {
@@ -461,6 +505,7 @@ input TagUpdateArgs {
 input TagCreateInput {
   name: String
   posts: PostRelateToManyForCreateInput
+  userImages: UserImageRelateToManyForCreateInput
 }
 
 """
