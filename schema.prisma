@@ -31,25 +31,30 @@ model UserImage {
   title     String   @default("")
   type      String   @default("post_picture")
   image     String?
+  altText   String   @default("")
   content   String   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   author    User?    @relation("UserImage_author", fields: [authorId], references: [id])
   authorId  String?  @map("author")
+  post      Post?    @relation("UserImage_post", fields: [postId], references: [id])
+  postId    String?  @map("post")
   tags      Tag[]    @relation("Tag_userImages")
   createdOn DateTime @default(now())
 
   @@index([authorId])
+  @@index([postId])
   @@index([createdOn])
 }
 
 model Post {
-  id          String    @id @default(cuid())
-  title       String    @default("")
-  status      String?   @default("draft")
-  content     String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id          String      @id @default(cuid())
+  title       String      @default("")
+  status      String?     @default("draft")
+  content     String      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   publishDate DateTime?
-  author      User?     @relation("Post_author", fields: [authorId], references: [id])
-  authorId    String?   @map("author")
-  tags        Tag[]     @relation("Post_tags")
+  author      User?       @relation("Post_author", fields: [authorId], references: [id])
+  authorId    String?     @map("author")
+  userImages  UserImage[] @relation("UserImage_post")
+  tags        Tag[]       @relation("Post_tags")
 
   @@index([authorId])
 }

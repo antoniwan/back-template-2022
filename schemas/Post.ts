@@ -39,6 +39,7 @@ export const Post = list({
         inlineCreate: { fields: ["name", "email"] },
       },
     }),
+    userImages: relationship({ ref: "UserImage.post", many: true }),
     tags: relationship({
       ref: "Tag.posts",
       ui: {

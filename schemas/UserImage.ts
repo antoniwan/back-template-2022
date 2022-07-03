@@ -39,6 +39,7 @@ export const UserImage = list({
       cloudinary: cloudinaryConfig,
       label: "Source",
     }),
+    altText: text(),
     content: document({
       formatting: true,
       links: true,
@@ -53,6 +54,9 @@ export const UserImage = list({
         inlineConnect: true,
         inlineCreate: { fields: ["name", "email"] },
       },
+    }),
+    post: relationship({
+      ref: "Post.userImages",
     }),
     tags: relationship({
       ref: "Tag.userImages",

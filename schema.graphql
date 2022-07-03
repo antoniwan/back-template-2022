@@ -199,8 +199,10 @@ type UserImage {
   title: String
   type: UserImageTypeType
   image: CloudinaryImage_File
+  altText: String
   content: UserImage_content_Document
   author: User
+  post: Post
   tags(
     where: TagWhereInput! = {}
     orderBy: [TagOrderByInput!]! = []
@@ -280,7 +282,9 @@ input UserImageWhereInput {
   id: IDFilter
   title: StringFilter
   type: UserImageTypeTypeNullableFilter
+  altText: StringFilter
   author: UserWhereInput
+  post: PostWhereInput
   tags: TagManyRelationFilter
   createdOn: DateTimeFilter
 }
@@ -302,6 +306,7 @@ input UserImageOrderByInput {
   id: OrderDirection
   title: OrderDirection
   type: OrderDirection
+  altText: OrderDirection
   createdOn: OrderDirection
 }
 
@@ -309,8 +314,10 @@ input UserImageUpdateInput {
   title: String
   type: UserImageTypeType
   image: Upload
+  altText: String
   content: JSON
   author: UserRelateToOneForUpdateInput
+  post: PostRelateToOneForUpdateInput
   tags: TagRelateToManyForUpdateInput
   createdOn: DateTime
 }
@@ -323,6 +330,12 @@ scalar Upload
 input UserRelateToOneForUpdateInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
+  disconnect: Boolean
+}
+
+input PostRelateToOneForUpdateInput {
+  create: PostCreateInput
+  connect: PostWhereUniqueInput
   disconnect: Boolean
 }
 
@@ -342,8 +355,10 @@ input UserImageCreateInput {
   title: String
   type: UserImageTypeType
   image: Upload
+  altText: String
   content: JSON
   author: UserRelateToOneForCreateInput
+  post: PostRelateToOneForCreateInput
   tags: TagRelateToManyForCreateInput
   createdOn: DateTime
 }
@@ -351,6 +366,11 @@ input UserImageCreateInput {
 input UserRelateToOneForCreateInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
+}
+
+input PostRelateToOneForCreateInput {
+  create: PostCreateInput
+  connect: PostWhereUniqueInput
 }
 
 input TagRelateToManyForCreateInput {
@@ -365,6 +385,13 @@ type Post {
   content: Post_content_Document
   publishDate: DateTime
   author: User
+  userImages(
+    where: UserImageWhereInput! = {}
+    orderBy: [UserImageOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [UserImage!]
+  userImagesCount(where: UserImageWhereInput! = {}): Int
   tags(
     where: TagWhereInput! = {}
     orderBy: [TagOrderByInput!]! = []
@@ -391,6 +418,7 @@ input PostWhereInput {
   status: StringNullableFilter
   publishDate: DateTimeNullableFilter
   author: UserWhereInput
+  userImages: UserImageManyRelationFilter
   tags: TagManyRelationFilter
 }
 
@@ -435,6 +463,7 @@ input PostUpdateInput {
   content: JSON
   publishDate: DateTime
   author: UserRelateToOneForUpdateInput
+  userImages: UserImageRelateToManyForUpdateInput
   tags: TagRelateToManyForUpdateInput
 }
 
@@ -449,6 +478,7 @@ input PostCreateInput {
   content: JSON
   publishDate: DateTime
   author: UserRelateToOneForCreateInput
+  userImages: UserImageRelateToManyForCreateInput
   tags: TagRelateToManyForCreateInput
 }
 
