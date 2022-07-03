@@ -41,6 +41,8 @@ We've put auth into its own file to make this humble starter easier to navigate.
 - [Keystone - Common fields](https://keystonejs.com/docs/apis/fields#fields-api)
 - [Keystone - Relationships](https://keystonejs.com/docs/guides/relationships#understanding-relationships)
 - [Keystone - Document field](https://keystonejs.com/docs/guides/document-fields#how-to-use-document-fields)
+- [Keystone - Auto API](https://keystonejs.com/docs/apis/auth#authentication-api)
+- [Keystone - Sessions](https://keystonejs.com/docs/apis/session#session-api)
 - TODO: FUTURE: While Keystone works as a standalone app, you can embed your Keystone app into a [Next.js](https://nextjs.org/) app. This is quite a different setup to the starter, and we recommend checking out our walkthrough for that [here](https://keystonejs.com/docs/walkthroughs/embedded-mode-with-sqlite-nextjs#how-to-embed-keystone-sq-lite-in-a-next-js-app).
 - For more on auth, check out our [Authentication API Docs](https://keystonejs.com/docs/apis/auth#authentication-api)
 - For more on database configuration, check out or [DB API Docs](https://keystonejs.com/docs/apis/config#db)
