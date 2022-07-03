@@ -1,7 +1,7 @@
 
 import 'dotenv/config'
 import { config } from '@keystone-6/core';
-import { lists } from './schema';
+import { lists } from './schemas';
 import { withAuth, session } from './auth';
 const { APP_PORT, FRONTEND_APP_URL, DB_PROVIDER, DB_URL } = process.env;
 
