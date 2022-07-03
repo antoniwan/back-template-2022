@@ -46,28 +46,12 @@ export const UserImage = list({
     }),
     author: relationship({
       ref: "User.images",
-      ui: {
-        displayMode: "cards",
-        cardFields: ["name", "email"],
-        inlineEdit: { fields: ["name", "email"] },
-        linkToItem: true,
-        inlineConnect: true,
-        inlineCreate: { fields: ["name", "email"] },
-      },
     }),
     post: relationship({
       ref: "Post.userImages",
     }),
     tags: relationship({
       ref: "Tag.userImages",
-      ui: {
-        displayMode: "cards",
-        cardFields: ["name"],
-        inlineEdit: { fields: ["name"] },
-        linkToItem: true,
-        inlineConnect: true,
-        inlineCreate: { fields: ["name"] },
-      },
       many: true,
     }),
     createdOn: timestamp({
